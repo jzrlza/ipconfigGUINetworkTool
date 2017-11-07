@@ -1,10 +1,17 @@
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.GridBagLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.JLabel;
 
 public class MainWindow {
 
-	private JFrame frame;
+	private JFrame frmIpConfigurationFor;
 
 	/**
 	 * Launch the application.
@@ -14,7 +21,7 @@ public class MainWindow {
 			public void run() {
 				try {
 					MainWindow window = new MainWindow();
-					window.frame.setVisible(true);
+					window.frmIpConfigurationFor.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -33,9 +40,11 @@ public class MainWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmIpConfigurationFor = new JFrame();
+		frmIpConfigurationFor.setTitle("IP Configuration for Wi-Fi Connection");
+		frmIpConfigurationFor.setResizable(false);
+		frmIpConfigurationFor.setBounds(10, 10, 555, 386);
+		frmIpConfigurationFor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmIpConfigurationFor.getContentPane().setLayout(null);
 	}
-
 }
