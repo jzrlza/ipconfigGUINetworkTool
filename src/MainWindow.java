@@ -1,4 +1,6 @@
 import java.awt.EventQueue;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -36,6 +38,7 @@ public class MainWindow {
 	 */
 	public MainWindow() {
 		initialize();
+		executeCommand();
 	}
 
 	/**
@@ -108,5 +111,55 @@ public class MainWindow {
 		snMaskText.setBounds(208, 284, 310, 22);
 		frmIpConfigurationFor.getContentPane().add(snMaskText);
 		snMaskText.setColumns(10);
+	}
+	
+	
+	private void executeCommand() {
+		Process command;
+		try {
+			if(System.getProperty("os.name").contains("Window")) {
+				command = Runtime.getRuntime().exec("ipconfig");
+			} //Windows
+			else {
+				command = Runtime.getRuntime().exec("ifconfig");
+			} //Mac and others
+			command.waitFor();
+			BufferedReader buf = new BufferedReader(new InputStreamReader(command.getInputStream()));
+			String line = "";
+			String output = "";
+			while ((line = buf.readLine()) != null) {
+				output += line + "split_here";
+			}
+			String[] a = output.split("split_here");
+			for(String x : a) {
+				System.out.println(x);
+			}
+
+			/*
+			 * This code below is for collecting data like ipv4 , 6 and etc. but not done yet.
+			 */
+
+			//			int check = 0,loca = 1;
+			//			String[] info = new String[6];
+			//			for(String x : a) {
+			//				System.out.println(x);
+			//				if(x.contains("en0: ")) {
+			//					check = 1;
+			//				}
+			//				if(check == 1) {
+			//					if(x.contains("inet")) {
+			//						info[loca] = x;
+			//						loca++;
+			//					}
+			//				}
+			//			}
+			//			System.out.println("==============");
+			//			System.out.println(info[1]);
+			//			System.out.println(info[2]);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
 	}
 }
