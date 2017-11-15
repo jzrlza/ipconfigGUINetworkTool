@@ -1,10 +1,22 @@
 import java.awt.EventQueue;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.text.ParseException;
+import java.util.StringTokenizer;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class MainWindow {
@@ -16,6 +28,7 @@ public class MainWindow {
 	private JTextField dnsSuffixText;
 	private JTextField macAdText;
 	private JTextField snMaskText;
+	String dnsSuffix, ipv6, ipv4, subnetMask, macAd, connectedness;
 
 	/**
 	 * Launch the application.
@@ -38,8 +51,54 @@ public class MainWindow {
 	 */
 	public MainWindow() {
 		initialize();
-		executeCommand();
+		refresh();
+		
+		
 	}
+	
+	 public void refresh() {
+		 String[] a = executeCommand();
+			boolean connected = false;
+			if(System.getProperty("os.name").contains("Window")) {
+				int wifiIndex = 0;
+				for(String x : a) {
+					if(x.contains("Wireless LAN adapter Wi-Fi")) {
+						break;
+					}
+					//System.out.println(x);
+					
+					wifiIndex++;
+				}
+				if(!a[wifiIndex+2].contains("Media State . . . . . . . . . . . : Media disconnected")) {
+					connected = true;
+				}
+				if(connected) {
+					dnsSuffix = a[wifiIndex+2].substring(39, a[wifiIndex+2].length());
+					ipv6 = a[wifiIndex+7].substring(39, a[wifiIndex+7].length());
+					ipv4 = a[wifiIndex+11].substring(39, a[wifiIndex+11].length());
+					subnetMask = a[wifiIndex+12].substring(39, a[wifiIndex+12].length());
+					macAd = a[wifiIndex+4].substring(39, a[wifiIndex+4].length());
+					connectedness = "Connected";
+				} else {
+					dnsSuffix = a[wifiIndex+3].substring(39, a[wifiIndex+3].length());
+					ipv6 = "Cannot Currently Display, Media Disconnected";
+					ipv4 = "Cannot Currently Display, Media Disconnected";
+					subnetMask = "Cannot Currently Display, Media Disconnected";
+					macAd = a[wifiIndex+5].substring(39, a[wifiIndex+5].length());
+					connectedness = "Disconnected";
+				}
+				
+			}
+			
+
+			dnsSuffixText.setText(dnsSuffix);
+			ipv6Text.setText(ipv6);
+			ipv4Text.setText(ipv4);
+			snMaskText.setText(subnetMask);
+			macAdText.setText(macAd);
+			connectionStatusText.setText(connectedness);
+	 }
+	
 
 	/**
 	 * Initialize the contents of the frame.
@@ -48,7 +107,7 @@ public class MainWindow {
 		frmIpConfigurationFor = new JFrame();
 		frmIpConfigurationFor.setTitle("IP Configuration for Wi-Fi Connection");
 		frmIpConfigurationFor.setResizable(false);
-		frmIpConfigurationFor.setBounds(10, 10, 555, 386);
+		frmIpConfigurationFor.setBounds(10, 10, 555, 454);
 		frmIpConfigurationFor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmIpConfigurationFor.getContentPane().setLayout(null);
 		
@@ -111,19 +170,29 @@ public class MainWindow {
 		snMaskText.setBounds(208, 284, 310, 22);
 		frmIpConfigurationFor.getContentPane().add(snMaskText);
 		snMaskText.setColumns(10);
+		
+		JButton btnNewButton = new JButton("Refresh");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				refresh();
+			}
+		});
+		btnNewButton.setBounds(12, 328, 512, 78);
+		frmIpConfigurationFor.getContentPane().add(btnNewButton);
 	}
 	
 	
-	private void executeCommand() {
+	
+	private String[] executeCommand() {
 		Process command;
 		try {
 			if(System.getProperty("os.name").contains("Window")) {
-				command = Runtime.getRuntime().exec("ipconfig");
+				command = Runtime.getRuntime().exec("ipconfig /all");
 			} //Windows
 			else {
 				command = Runtime.getRuntime().exec("ifconfig");
 			} //Mac and others
-			command.waitFor();
+			//command.waitFor(); not work for ipconfig /all
 			BufferedReader buf = new BufferedReader(new InputStreamReader(command.getInputStream()));
 			String line = "";
 			String output = "";
@@ -131,9 +200,11 @@ public class MainWindow {
 				output += line + "split_here";
 			}
 			String[] a = output.split("split_here");
-			for(String x : a) {
-				System.out.println(x);
-			}
+			//for(String x : a) {
+				//if(x.contains("Wi-Fi"))
+			//	System.out.println(x);
+			//}
+			return a;
 
 			/*
 			 * This code below is for collecting data like ipv4 , 6 and etc. but not done yet.
@@ -159,7 +230,7 @@ public class MainWindow {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		return null;
 
 	}
 }
