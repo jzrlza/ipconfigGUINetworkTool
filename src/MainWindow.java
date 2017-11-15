@@ -73,18 +73,36 @@ public class MainWindow {
 					connected = true;
 				}
 				if(connected) {
-					dnsSuffix = a[wifiIndex+2].substring(39, a[wifiIndex+2].length());
-					ipv6 = a[wifiIndex+7].substring(39, a[wifiIndex+7].length());
-					ipv4 = a[wifiIndex+11].substring(39, a[wifiIndex+11].length());
-					subnetMask = a[wifiIndex+12].substring(39, a[wifiIndex+12].length());
-					macAd = a[wifiIndex+4].substring(39, a[wifiIndex+4].length());
+					for(int i = wifiIndex; i < wifiIndex+26; i++) {
+						if(a[i].contains("Connection-specific DNS Suffix  . :")) {
+							dnsSuffix = a[i].substring(39, a[i].length());
+						}
+						if(a[i].contains("IPv6 Address. . . . . . . . . . . :")) {
+							ipv6 = a[i].substring(39, a[i].length());
+						}
+						if(a[i].contains("IPv4 Address. . . . . . . . . . . :")) {
+							ipv4 = a[i].substring(39, a[i].length());
+						}
+						if(a[i].contains("Subnet Mask . . . . . . . . . . . :")) {
+							subnetMask = a[i].substring(39, a[i].length());
+						}
+						if(a[i].contains("Physical Address. . . . . . . . . :")) {
+							macAd = a[i].substring(39, a[i].length());
+						}
+					}
 					connectedness = "Connected";
 				} else {
-					dnsSuffix = a[wifiIndex+3].substring(39, a[wifiIndex+3].length());
+					for(int i = wifiIndex; i < wifiIndex+7; i++) {
+						if(a[i].contains("Connection-specific DNS Suffix  . :")) {
+							dnsSuffix = a[i].substring(39, a[i].length());
+						}
+						if(a[i].contains("Physical Address. . . . . . . . . :")) {
+							macAd = a[i].substring(39, a[i].length());
+						}
+					}
 					ipv6 = "Cannot Currently Display, Media Disconnected";
 					ipv4 = "Cannot Currently Display, Media Disconnected";
 					subnetMask = "Cannot Currently Display, Media Disconnected";
-					macAd = a[wifiIndex+5].substring(39, a[wifiIndex+5].length());
 					connectedness = "Disconnected";
 				}
 				
