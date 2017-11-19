@@ -65,6 +65,11 @@ public class MainWindow {
 				connected = true;
 			}
 			if(connected) {
+				ipv6 = "";
+				ipv4 = "";
+				subnetMask = "";
+				connectedness = "";
+				macAd = "";
 				for(int i = wifiIndex; i < wifiIndex+26; i++) {
 					if(a[i].contains("Connection-specific DNS Suffix  . :")) {
 						dnsSuffix = a[i].substring(39, a[i].length());
@@ -84,6 +89,11 @@ public class MainWindow {
 				}
 				connectedness = "Connected";
 			} else {
+				ipv6 = "";
+				ipv4 = "";
+				subnetMask = "";
+				connectedness = "";
+				macAd = "";
 				for(int i = wifiIndex; i < wifiIndex+7; i++) {
 					if(a[i].contains("Connection-specific DNS Suffix  . :")) {
 						dnsSuffix = a[i].substring(39, a[i].length());
@@ -128,6 +138,11 @@ public class MainWindow {
 			}
 			macAd = collectedData[1].substring(6);
 			if(connected) {
+				dnsSuffix = "";
+				ipv6 = "";
+				ipv4 = "";
+				subnetMask = "";
+				
 				int endOfIpv6 = collectedData[2].indexOf("prefixlen");
 				int endOfIpv = collectedData[3].indexOf("netmask");
 				int endOfNet = collectedData[3].indexOf("broadcast");
