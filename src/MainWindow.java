@@ -178,24 +178,24 @@ public class MainWindow {
 		frmIpConfigurationFor = new JFrame();
 		frmIpConfigurationFor.setTitle("IP Configuration for Wi-Fi Connection");
 		frmIpConfigurationFor.setResizable(false);
-		frmIpConfigurationFor.setBounds(10, 10, 555, 470);
+		frmIpConfigurationFor.setBounds(10, 10, 555, 499);
 		frmIpConfigurationFor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmIpConfigurationFor.getContentPane().setLayout(null);
 
 		JLabel lblConnectionStatus = new JLabel("Connection Status: ");
-		lblConnectionStatus.setBounds(27, 29, 179, 16);
+		lblConnectionStatus.setBounds(27, 48, 179, 16);
 		frmIpConfigurationFor.getContentPane().add(lblConnectionStatus);
 
 		JLabel lblIpv = new JLabel("IPv4");
-		lblIpv.setBounds(27, 86, 112, 16);
+		lblIpv.setBounds(27, 95, 112, 16);
 		frmIpConfigurationFor.getContentPane().add(lblIpv);
 
 		JLabel lblIpv_1 = new JLabel("IPv6");
-		lblIpv_1.setBounds(27, 132, 112, 16);
+		lblIpv_1.setBounds(27, 141, 112, 16);
 		frmIpConfigurationFor.getContentPane().add(lblIpv_1);
 
 		JLabel lblDnsSuffix = new JLabel("DNS Suffix");
-		lblDnsSuffix.setBounds(27, 183, 112, 16);
+		lblDnsSuffix.setBounds(27, 189, 112, 16);
 		frmIpConfigurationFor.getContentPane().add(lblDnsSuffix);
 
 		JLabel lblMacAddress = new JLabel("MAC Address");
@@ -208,25 +208,25 @@ public class MainWindow {
 
 		connectionStatusText = new JTextField();
 		connectionStatusText.setEditable(false);
-		connectionStatusText.setBounds(208, 26, 310, 22);
+		connectionStatusText.setBounds(208, 45, 310, 22);
 		frmIpConfigurationFor.getContentPane().add(connectionStatusText);
 		connectionStatusText.setColumns(10);
 
 		ipv4Text = new JTextField();
 		ipv4Text.setEditable(false);
-		ipv4Text.setBounds(208, 83, 310, 22);
+		ipv4Text.setBounds(208, 92, 310, 22);
 		frmIpConfigurationFor.getContentPane().add(ipv4Text);
 		ipv4Text.setColumns(10);
 
 		ipv6Text = new JTextField();
 		ipv6Text.setEditable(false);
-		ipv6Text.setBounds(208, 129, 310, 22);
+		ipv6Text.setBounds(208, 138, 310, 22);
 		frmIpConfigurationFor.getContentPane().add(ipv6Text);
 		ipv6Text.setColumns(10);
 
 		dnsSuffixText = new JTextField();
 		dnsSuffixText.setEditable(false);
-		dnsSuffixText.setBounds(208, 180, 310, 22);
+		dnsSuffixText.setBounds(208, 186, 310, 22);
 		frmIpConfigurationFor.getContentPane().add(dnsSuffixText);
 		dnsSuffixText.setColumns(10);
 
@@ -248,11 +248,11 @@ public class MainWindow {
 				refresh();
 			}
 		});
-		btnNewButton.setBounds(6, 315, 512, 29);
+		btnNewButton.setBounds(21, 319, 512, 29);
 		frmIpConfigurationFor.getContentPane().add(btnNewButton);
 
 		urlTextField = new JTextField();
-		urlTextField.setBounds(132, 356, 268, 26);
+		urlTextField.setBounds(132, 387, 268, 26);
 		frmIpConfigurationFor.getContentPane().add(urlTextField);
 		urlTextField.setColumns(10);
 		urlTextField.setText("enter url here");
@@ -280,20 +280,28 @@ public class MainWindow {
 				
 			}
 		});
-		goBtn.setBounds(416, 356, 117, 29);
+		goBtn.setBounds(416, 387, 117, 29);
 		frmIpConfigurationFor.getContentPane().add(goBtn);
 
 		commandBox = new JComboBox<String>();
-		commandBox.setBounds(27, 356, 81, 27);
+		commandBox.setBounds(27, 387, 81, 27);
 		frmIpConfigurationFor.getContentPane().add(commandBox);
 		commandBox.addItem("Ping");
 
 		txtResult = new JTextField();
 		txtResult.setEditable(false);
 		txtResult.setText("result");
-		txtResult.setBounds(27, 394, 500, 26);
+		txtResult.setBounds(27, 425, 500, 26);
 		frmIpConfigurationFor.getContentPane().add(txtResult);
 		txtResult.setColumns(10);
+		
+		JLabel lblOtherPrograms = new JLabel("Other Programs : ");
+		lblOtherPrograms.setBounds(16, 357, 134, 16);
+		frmIpConfigurationFor.getContentPane().add(lblOtherPrograms);
+		
+		JLabel lblIpConfiguration = new JLabel("IP Configuration : ");
+		lblIpConfiguration.setBounds(12, 13, 112, 16);
+		frmIpConfigurationFor.getContentPane().add(lblIpConfiguration);
 	}
 
 	private String[] command() {
