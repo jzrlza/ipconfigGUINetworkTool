@@ -1,15 +1,6 @@
 import java.awt.EventQueue;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.text.ParseException;
-import java.util.StringTokenizer;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -34,7 +25,7 @@ public class MainWindow {
 	String dnsSuffix, ipv6, ipv4, subnetMask, macAd, connectedness;
 	private JTextField urlTextField;
 	private JButton goBtn;
-	private JComboBox commandBox;
+	private JComboBox<String> commandBox;
 	private JTextField txtResult;
 
 	/**
@@ -292,7 +283,7 @@ public class MainWindow {
 		goBtn.setBounds(416, 356, 117, 29);
 		frmIpConfigurationFor.getContentPane().add(goBtn);
 
-		commandBox = new JComboBox();
+		commandBox = new JComboBox<String>();
 		commandBox.setBounds(27, 356, 81, 27);
 		frmIpConfigurationFor.getContentPane().add(commandBox);
 		commandBox.addItem("Ping");
