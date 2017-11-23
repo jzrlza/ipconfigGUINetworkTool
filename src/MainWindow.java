@@ -298,6 +298,7 @@ public class MainWindow {
 		commandBox.addItem("Ping");
 
 		txtResult = new JTextField();
+		txtResult.setEditable(false);
 		txtResult.setText("result");
 		txtResult.setBounds(27, 394, 500, 26);
 		frmIpConfigurationFor.getContentPane().add(txtResult);
