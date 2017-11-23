@@ -1,6 +1,15 @@
 import java.awt.EventQueue;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.text.ParseException;
+import java.util.StringTokenizer;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -8,10 +17,13 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
 
 
 public class MainWindow {
 
+	private String [] hexaCheatSheet = {"0x00000000", "0x80000000", "0xc0000000", "0xe0000000","0xf0000000","0xf8000000","0xfc000000", "0xfe000000", "0xff000000", "0xff800000", "0xffc00000", "0xffe00000", "0xfff00000", "0xfff80000", "0xfffc0000", "0xfffe0000", "0xffff0000", "0xffff8000", "0xffffc000", "0xffffe000", "0xfffff000", "0xfffff800", "0xfffffc00", "0xfffffe00","0xffffff00", "0xffffff80", "0xffffffc0","0xffffffe0", "0xfffffff0", "0xfffffff8", "0xfffffffc", "0xfffffffe","0xffffffff"};
+	private String [] subnetDottedDeci= {"0.0.0.0", "128.0.0.0", "192.0.0.0", "224.0.0.0", "240.0.0.0", "248.0.0.0", "252.0.0.0", "254.0.0.0", "	255.0.0.0", "255.128.0.0", "255.192.0.0", "255.224.0.0", "255.240.0.0", "255.248.0.0", "255.252.0.0", "255.254.0.0", "255.255.0.0", "255.255.128.0", "255.255.192.0", "255.255.224.0", "255.255.240.0", "255.255.248.0", "255.255.252.0", "255.255.254.0", "255.255.255.0", "255.255.255.128", "255.255.255.192", "255.255.255.224", "255.255.255.240", "255.255.255.248", "255.255.255.252", "255.255.255.254", "255.255.255.255"};
 	private JFrame frmIpConfigurationFor;
 	private JTextField connectionStatusText;
 	private JTextField ipv4Text;
@@ -20,6 +32,10 @@ public class MainWindow {
 	private JTextField macAdText;
 	private JTextField snMaskText;
 	String dnsSuffix, ipv6, ipv4, subnetMask, macAd, connectedness;
+	private JTextField urlTextField;
+	private JButton goBtn;
+	private JComboBox commandBox;
+	private JTextField txtResult;
 
 	/**
 	 * Launch the application.
@@ -48,7 +64,7 @@ public class MainWindow {
 	}
 
 	public void refresh() {
-		String[] a = executeCommand();
+		String[] a = executeCommand(command());
 		boolean connected = false;
 
 		if(System.getProperty("os.name").contains("Window")) {
@@ -65,11 +81,6 @@ public class MainWindow {
 				connected = true;
 			}
 			if(connected) {
-				ipv6 = "";
-				ipv4 = "";
-				subnetMask = "";
-				connectedness = "";
-				macAd = "";
 				for(int i = wifiIndex; i < wifiIndex+26; i++) {
 					if(a[i].contains("Connection-specific DNS Suffix  . :")) {
 						dnsSuffix = a[i].substring(39, a[i].length());
@@ -89,11 +100,6 @@ public class MainWindow {
 				}
 				connectedness = "Connected";
 			} else {
-				ipv6 = "";
-				ipv4 = "";
-				subnetMask = "";
-				connectedness = "";
-				macAd = "";
 				for(int i = wifiIndex; i < wifiIndex+7; i++) {
 					if(a[i].contains("Connection-specific DNS Suffix  . :")) {
 						dnsSuffix = a[i].substring(39, a[i].length());
@@ -108,7 +114,7 @@ public class MainWindow {
 				connectedness = "Disconnected";
 			}
 		}
-		
+
 		//for unix base os.
 		else {
 			String[] collectedData;
@@ -116,8 +122,8 @@ public class MainWindow {
 			int index = 0;
 			for(String x : a) {
 				if(x.contains("en0: flags=")) {
-					for(int i=index;i<index+7;i++) {
-						if(a[i].contains("en1: flags=")) {
+					for(int i=index;;i++) {
+						if(a[i].contains("nameserver")) {
 							break;
 						}
 						line += a[i]+" -split_here- ";
@@ -138,18 +144,22 @@ public class MainWindow {
 			}
 			macAd = collectedData[1].substring(6);
 			if(connected) {
-				dnsSuffix = "";
-				ipv6 = "";
-				ipv4 = "";
-				subnetMask = "";
-				
 				int endOfIpv6 = collectedData[2].indexOf("prefixlen");
 				int endOfIpv = collectedData[3].indexOf("netmask");
 				int endOfNet = collectedData[3].indexOf("broadcast");
 				ipv6 = collectedData[2].substring(6,endOfIpv6);
 				ipv4 = collectedData[3].substring(5,endOfIpv);
-				dnsSuffix = collectedData[7].substring(7);
+				dnsSuffix = collectedData[collectedData.length-1];
 				subnetMask = collectedData[3].substring(endOfIpv+7,endOfNet);
+				for(int i = 0; i < hexaCheatSheet.length; i++) {
+					if(hexaCheatSheet[i].equals(subnetMask.trim())) {
+						subnetMask = subnetDottedDeci[i];
+						break;
+					}
+					else {
+						System.out.println("Roied");
+					}
+				}
 				connectedness = "Connected";
 			}
 			else {
@@ -177,7 +187,7 @@ public class MainWindow {
 		frmIpConfigurationFor = new JFrame();
 		frmIpConfigurationFor.setTitle("IP Configuration for Wi-Fi Connection");
 		frmIpConfigurationFor.setResizable(false);
-		frmIpConfigurationFor.setBounds(10, 10, 555, 454);
+		frmIpConfigurationFor.setBounds(10, 10, 555, 470);
 		frmIpConfigurationFor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmIpConfigurationFor.getContentPane().setLayout(null);
 
@@ -247,40 +257,87 @@ public class MainWindow {
 				refresh();
 			}
 		});
-		btnNewButton.setBounds(12, 328, 512, 78);
+		btnNewButton.setBounds(6, 315, 512, 29);
 		frmIpConfigurationFor.getContentPane().add(btnNewButton);
+
+		urlTextField = new JTextField();
+		urlTextField.setBounds(132, 356, 268, 26);
+		frmIpConfigurationFor.getContentPane().add(urlTextField);
+		urlTextField.setColumns(10);
+		urlTextField.setText("enter url here");
+
+		goBtn = new JButton("Go!!");
+		goBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(System.getProperty("os.name").contains("Window")) {
+					if(commandBox.getSelectedItem().toString().equalsIgnoreCase("ping")) {
+						String[] a = executeCommand(new String[] {"ping "+urlTextField.getText()});
+						for(String x : a) {
+							System.out.println(x);
+						}
+						txtResult.setText(a[a.length-1]);
+					}
+				} else {
+					if(commandBox.getSelectedItem().toString().equalsIgnoreCase("ping")) {
+						String[] a = executeCommand(new String[] {"ping -i .1  -t 5 "+urlTextField.getText()});
+						for(String x : a) {
+							System.out.println(x);
+						}
+						txtResult.setText(a[a.length-2]);
+					}
+				}
+				
+			}
+		});
+		goBtn.setBounds(416, 356, 117, 29);
+		frmIpConfigurationFor.getContentPane().add(goBtn);
+
+		commandBox = new JComboBox();
+		commandBox.setBounds(27, 356, 81, 27);
+		frmIpConfigurationFor.getContentPane().add(commandBox);
+		commandBox.addItem("Ping");
+
+		txtResult = new JTextField();
+		txtResult.setText("result");
+		txtResult.setBounds(27, 394, 500, 26);
+		frmIpConfigurationFor.getContentPane().add(txtResult);
+		txtResult.setColumns(10);
 	}
 
-
-
-	private String[] executeCommand() {
-		Process command;
+	private String[] command() {
+		String[] a;
 		try {
 			if(System.getProperty("os.name").contains("Window")) {
-				command = Runtime.getRuntime().exec("ipconfig /all");
+				a = new String[] {"ipconfig /all"};
 			} //Windows
 			else {
-				command = Runtime.getRuntime().exec("ifconfig");
+				a = new String[] {"ifconfig","cat /etc/resolv.conf"};
 			} //Mac and others
-			//command.waitFor(); not work for ipconfig /all
-			BufferedReader buf = new BufferedReader(new InputStreamReader(command.getInputStream()));
-			String line = "";
-			String output = "";
-			while ((line = buf.readLine()) != null) {
-				output += line + "split_here";
-			}
-			
-			if(!System.getProperty("os.name").contains("Window")) {
-				command = Runtime.getRuntime().exec("cat /etc/resolv.conf");
+
+			return a;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private String[] executeCommand(String[] commands) {
+		Process command;
+		String output = "";
+		BufferedReader buf;
+		try {
+			for(String x : commands) {
+				command = Runtime.getRuntime().exec(x);
 				buf = new BufferedReader(new InputStreamReader(command.getInputStream()));
+				String line = "";
 				while ((line = buf.readLine()) != null) {
+					System.out.println(line);
 					output += line + "split_here";
 				}
-			}//to get DNS of unix base os.
+			}
 
 			String[] a = output.split("split_here");
-			
-			
 			return a;
 
 		} catch (Exception e) {
