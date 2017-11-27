@@ -9,13 +9,14 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
+import javax.swing.JTextArea;
 
 
 public class MainWindow {
 
 	private String [] hexaCheatSheet = {"0x00000000", "0x80000000", "0xc0000000", "0xe0000000","0xf0000000","0xf8000000","0xfc000000", "0xfe000000", "0xff000000", "0xff800000", "0xffc00000", "0xffe00000", "0xfff00000", "0xfff80000", "0xfffc0000", "0xfffe0000", "0xffff0000", "0xffff8000", "0xffffc000", "0xffffe000", "0xfffff000", "0xfffff800", "0xfffffc00", "0xfffffe00","0xffffff00", "0xffffff80", "0xffffffc0","0xffffffe0", "0xfffffff0", "0xfffffff8", "0xfffffffc", "0xfffffffe","0xffffffff"};
 	private String [] subnetDottedDeci= {"0.0.0.0", "128.0.0.0", "192.0.0.0", "224.0.0.0", "240.0.0.0", "248.0.0.0", "252.0.0.0", "254.0.0.0", "	255.0.0.0", "255.128.0.0", "255.192.0.0", "255.224.0.0", "255.240.0.0", "255.248.0.0", "255.252.0.0", "255.254.0.0", "255.255.0.0", "255.255.128.0", "255.255.192.0", "255.255.224.0", "255.255.240.0", "255.255.248.0", "255.255.252.0", "255.255.254.0", "255.255.255.0", "255.255.255.128", "255.255.255.192", "255.255.255.224", "255.255.255.240", "255.255.255.248", "255.255.255.252", "255.255.255.254", "255.255.255.255"};
-	private JFrame frmIpConfigurationFor;
+	private JFrame frmIpConfigurationFor , console;
 	private JTextField connectionStatusText;
 	private JTextField ipv4Text;
 	private JTextField ipv6Text;
@@ -26,8 +27,7 @@ public class MainWindow {
 	private JTextField urlTextField;
 	private JButton goBtn;
 	private JComboBox<String> commandBox;
-	private JTextField txtResult;
-
+	private JTextArea textArea;
 	/**
 	 * Launch the application.
 	 */
@@ -55,7 +55,7 @@ public class MainWindow {
 	}
 
 	public void refresh() {
-		String[] a = executeCommand(command());
+		String[] a = executeCommand(command("ipconfig",null));
 		boolean connected = false;
 
 		if(System.getProperty("os.name").contains("Window")) {
@@ -147,9 +147,6 @@ public class MainWindow {
 						subnetMask = subnetDottedDeci[i];
 						break;
 					}
-					else {
-						System.out.println("Roied");
-					}
 				}
 				connectedness = "Connected";
 			}
@@ -178,24 +175,24 @@ public class MainWindow {
 		frmIpConfigurationFor = new JFrame();
 		frmIpConfigurationFor.setTitle("IP Configuration for Wi-Fi Connection");
 		frmIpConfigurationFor.setResizable(false);
-		frmIpConfigurationFor.setBounds(10, 10, 555, 499);
+		frmIpConfigurationFor.setBounds(10, 10, 555, 475);
 		frmIpConfigurationFor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmIpConfigurationFor.getContentPane().setLayout(null);
 
 		JLabel lblConnectionStatus = new JLabel("Connection Status: ");
-		lblConnectionStatus.setBounds(27, 48, 179, 16);
+		lblConnectionStatus.setBounds(27, 29, 179, 16);
 		frmIpConfigurationFor.getContentPane().add(lblConnectionStatus);
 
 		JLabel lblIpv = new JLabel("IPv4");
-		lblIpv.setBounds(27, 95, 112, 16);
+		lblIpv.setBounds(27, 86, 112, 16);
 		frmIpConfigurationFor.getContentPane().add(lblIpv);
 
 		JLabel lblIpv_1 = new JLabel("IPv6");
-		lblIpv_1.setBounds(27, 141, 112, 16);
+		lblIpv_1.setBounds(27, 132, 112, 16);
 		frmIpConfigurationFor.getContentPane().add(lblIpv_1);
 
 		JLabel lblDnsSuffix = new JLabel("DNS Suffix");
-		lblDnsSuffix.setBounds(27, 189, 112, 16);
+		lblDnsSuffix.setBounds(27, 183, 112, 16);
 		frmIpConfigurationFor.getContentPane().add(lblDnsSuffix);
 
 		JLabel lblMacAddress = new JLabel("MAC Address");
@@ -208,25 +205,25 @@ public class MainWindow {
 
 		connectionStatusText = new JTextField();
 		connectionStatusText.setEditable(false);
-		connectionStatusText.setBounds(208, 45, 310, 22);
+		connectionStatusText.setBounds(208, 26, 310, 22);
 		frmIpConfigurationFor.getContentPane().add(connectionStatusText);
 		connectionStatusText.setColumns(10);
 
 		ipv4Text = new JTextField();
 		ipv4Text.setEditable(false);
-		ipv4Text.setBounds(208, 92, 310, 22);
+		ipv4Text.setBounds(208, 83, 310, 22);
 		frmIpConfigurationFor.getContentPane().add(ipv4Text);
 		ipv4Text.setColumns(10);
 
 		ipv6Text = new JTextField();
 		ipv6Text.setEditable(false);
-		ipv6Text.setBounds(208, 138, 310, 22);
+		ipv6Text.setBounds(208, 129, 310, 22);
 		frmIpConfigurationFor.getContentPane().add(ipv6Text);
 		ipv6Text.setColumns(10);
 
 		dnsSuffixText = new JTextField();
 		dnsSuffixText.setEditable(false);
-		dnsSuffixText.setBounds(208, 186, 310, 22);
+		dnsSuffixText.setBounds(208, 180, 310, 22);
 		frmIpConfigurationFor.getContentPane().add(dnsSuffixText);
 		dnsSuffixText.setColumns(10);
 
@@ -248,11 +245,11 @@ public class MainWindow {
 				refresh();
 			}
 		});
-		btnNewButton.setBounds(21, 319, 512, 29);
+		btnNewButton.setBounds(6, 315, 512, 29);
 		frmIpConfigurationFor.getContentPane().add(btnNewButton);
 
 		urlTextField = new JTextField();
-		urlTextField.setBounds(132, 387, 268, 26);
+		urlTextField.setBounds(171, 356, 347, 26);
 		frmIpConfigurationFor.getContentPane().add(urlTextField);
 		urlTextField.setColumns(10);
 		urlTextField.setText("enter url here");
@@ -260,58 +257,66 @@ public class MainWindow {
 		goBtn = new JButton("Go!!");
 		goBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(System.getProperty("os.name").contains("Window")) {
-					if(commandBox.getSelectedItem().toString().equalsIgnoreCase("ping")) {
-						String[] a = executeCommand(new String[] {"ping "+urlTextField.getText()});
-						for(String x : a) {
-							System.out.println(x);
-						}
-						txtResult.setText(a[a.length-1]);
-					}
-				} else {
-					if(commandBox.getSelectedItem().toString().equalsIgnoreCase("ping")) {
-						String[] a = executeCommand(new String[] {"ping -i .1  -t 5 "+urlTextField.getText()});
-						for(String x : a) {
-							System.out.println(x);
-						}
-						txtResult.setText(a[a.length-2]);
-					}
+				console.setVisible(true);
+
+				String[] a = executeCommand(command(commandBox.getSelectedItem().toString(),urlTextField.getText()));
+				String output = "";
+				for(String x : a) {
+					output+=x+"\n";
 				}
-				
+				textArea.setText(output);
+
+
 			}
 		});
-		goBtn.setBounds(416, 387, 117, 29);
+		goBtn.setBounds(195, 397, 117, 29);
 		frmIpConfigurationFor.getContentPane().add(goBtn);
 
-		commandBox = new JComboBox<String>();
-		commandBox.setBounds(27, 387, 81, 27);
+		commandBox = new JComboBox();
+		commandBox.setBounds(27, 357, 132, 27);
 		frmIpConfigurationFor.getContentPane().add(commandBox);
-		commandBox.addItem("Ping");
+		commandBox.addItem("ping");
+		commandBox.addItem("nslookup");
+		
+		
 
-		txtResult = new JTextField();
-		txtResult.setEditable(false);
-		txtResult.setText("result");
-		txtResult.setBounds(27, 425, 500, 26);
-		frmIpConfigurationFor.getContentPane().add(txtResult);
-		txtResult.setColumns(10);
-		
-		JLabel lblOtherPrograms = new JLabel("Other Programs : ");
-		lblOtherPrograms.setBounds(16, 357, 134, 16);
-		frmIpConfigurationFor.getContentPane().add(lblOtherPrograms);
-		
-		JLabel lblIpConfiguration = new JLabel("IP Configuration : ");
-		lblIpConfiguration.setBounds(12, 13, 112, 16);
-		frmIpConfigurationFor.getContentPane().add(lblIpConfiguration);
+		console = new JFrame();
+		console.setTitle("console");
+		console.setResizable(false);
+		console.setBounds(10, 10, 555, 900);
+		console.getContentPane().setLayout(null);
+
+		textArea = new JTextArea();
+		textArea.setBounds(6, 6, 543, 899);
+		console.getContentPane().add(textArea);
+
+
 	}
 
-	private String[] command() {
-		String[] a;
+	private String[] command(String com,String url) {
+		String[] a = null;
 		try {
 			if(System.getProperty("os.name").contains("Window")) {
-				a = new String[] {"ipconfig /all"};
+				if(com.contentEquals("ipconfig")) {
+					a = new String[] {"ipconfig /all"};
+				}
+				else if(com.equals("ping")){
+					a = new String[] {"ping "+url};
+				}
+				else if(com.equals("nslookup")){
+					a = new String[] {"nslookup "+url};
+				}
 			} //Windows
 			else {
-				a = new String[] {"ifconfig","cat /etc/resolv.conf"};
+				if(com.contentEquals("ipconfig")) {
+					a = new String[] {"ifconfig","cat /etc/resolv.conf"};
+				}
+				else if(com.equals("ping")){
+					a = new String[] {"ping -i .1  -t 5 "+url};
+				}
+				else if(com.equals("nslookup")){
+					a = new String[] {"nslookup "+url};
+				}
 			} //Mac and others
 
 			return a;
@@ -332,7 +337,7 @@ public class MainWindow {
 				buf = new BufferedReader(new InputStreamReader(command.getInputStream()));
 				String line = "";
 				while ((line = buf.readLine()) != null) {
-					System.out.println(line);
+					System.out.println("  "+line);
 					output += line + "split_here";
 				}
 			}
