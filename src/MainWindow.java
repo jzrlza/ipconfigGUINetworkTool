@@ -272,7 +272,7 @@ public class MainWindow {
 		goBtn.setBounds(195, 397, 117, 29);
 		frmIpConfigurationFor.getContentPane().add(goBtn);
 
-		commandBox = new JComboBox();
+		commandBox = new JComboBox<String>();
 		commandBox.setBounds(27, 357, 132, 27);
 		frmIpConfigurationFor.getContentPane().add(commandBox);
 		commandBox.addItem("ping");
